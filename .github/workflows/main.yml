@@ -1,24 +1,28 @@
-name: Deploy to Cloud Run
+name: Build and Deploy to Cloud Run
 
 on:
   push:
     branches:
-      - main
+      - main  # Change this if your default branch is named differently
 
 jobs:
   deploy:
-    name: Build and Deploy to Cloud Run
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_S_KEY }}'
 
       - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
           project_id: ecommerce-recommender-464115
+          install_components: 'beta'
 
       - name: Build and push Docker image
         run: |
