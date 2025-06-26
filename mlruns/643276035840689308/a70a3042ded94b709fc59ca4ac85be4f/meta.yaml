@@ -1,0 +1,14 @@
+artifact_uri: file:///c:/Users/Ashwinbala/ecommerce_recommender/mlruns/643276035840689308/a70a3042ded94b709fc59ca4ac85be4f/artifacts
+end_time: 1750952335397
+entry_point_name: ''
+experiment_id: '643276035840689308'
+lifecycle_stage: active
+run_id: a70a3042ded94b709fc59ca4ac85be4f
+run_name: valuable-roo-610
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750952335256
+status: 3
+tags: []
+user_id: Ashwinbala

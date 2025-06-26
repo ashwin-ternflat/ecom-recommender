@@ -1,0 +1,6 @@
+artifact_location: file:///c:/Users/Ashwinbala/ecommerce_recommender/mlruns/643276035840689308
+creation_time: 1750952334394
+experiment_id: '643276035840689308'
+last_update_time: 1750952334394
+lifecycle_stage: active
+name: recommender-als
