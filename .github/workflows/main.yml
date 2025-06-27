@@ -1,9 +1,9 @@
-name: Build and Deploy to Cloud Run
+name: Build, Train and Deploy to Cloud Run
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
@@ -16,19 +16,27 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_S_KEY }}'
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-      - name: Set up Google Cloud SDK
+      - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ecommerce-recommender-464115
-          install_components: 'beta'
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-      - name: Run model training
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scipy numpy scikit-learn implicit
+
+      - name: Run training script
         run: |
           python model/train_model.py
-    
+
       - name: Build and push Docker image
         run: |
           gcloud builds submit --tag gcr.io/ecommerce-recommender-464115/ecommerce-recommender-api
@@ -40,5 +48,3 @@ jobs:
             --platform managed \
             --region asia-south1 \
             --allow-unauthenticated
-
-
