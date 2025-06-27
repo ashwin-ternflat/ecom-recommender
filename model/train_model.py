@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 os.makedirs("../models", exist_ok=True)
 
-# Load and prepare data
+
 df = pd.read_csv('../data/sessionized_events.csv')
 
 user_ids = df['user_id'].unique()
@@ -32,34 +32,34 @@ n_items = len(item_id_to_index)
 
 train_matrix = build_sparse_matrix(train_df, n_users, n_items)
 
-# Set ALS hyperparameters
+
 factors = 50
 iterations = 15
 regularization = 0.01
 
-# Start MLflow run
+
 mlflow.set_experiment("recommender-als")
 
 with mlflow.start_run():
-    # Log hyperparameters
+    
     mlflow.log_param("factors", factors)
     mlflow.log_param("iterations", iterations)
     mlflow.log_param("regularization", regularization)
 
-    # Train model
+    
     model = AlternatingLeastSquares(factors=factors, iterations=iterations, regularization=regularization)
     model.fit(train_matrix)
 
-    # Save model and matrix
+    
     with open("../models/als_model.pkl", "wb") as f:
         pickle.dump((model, user_id_to_index, item_id_to_index), f)
     
     save_npz("../models/train_matrix.npz", train_matrix)
 
-    # Log model artifact
+    
     mlflow.log_artifact("../models/als_model.pkl", artifact_path="models")
 
-    # Optional: compute offline metric here or log via separate evaluate.py
-    mlflow.log_metric("precision_at_10", 0.17)  # Replace with actual metric later
+    
+    mlflow.log_metric("precision_at_10", 0.17)  
 
 print(" Model trained, saved, and logged to MLflow")

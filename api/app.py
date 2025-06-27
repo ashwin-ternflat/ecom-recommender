@@ -5,9 +5,8 @@ import numpy as np
 
 app = FastAPI(title="E-Commerce Recommender API")
 
-# --------------------------
+
 # Load model + mappings
-# --------------------------
 with open("models/als_model.pkl", "rb") as f:
     model, user_id_to_index, item_id_to_index = pickle.load(f)
 
@@ -19,9 +18,6 @@ user_factors = model.user_factors
 item_factors = model.item_factors
 
 
-# --------------------------
-# Recommendation logic
-# --------------------------
 def recommend_items_for_user(user_id: str, k: int = 10) -> List[str]:
     if user_id not in user_id_to_index:
         raise ValueError(f"User ID {user_id} not found")
@@ -36,9 +32,9 @@ def recommend_items_for_user(user_id: str, k: int = 10) -> List[str]:
     return recommended_items
 
 
-# --------------------------
+
 # API Endpoint
-# --------------------------
+
 @app.get("/recommendations", response_model=List[str])
 def get_recommendations(user_id: str = Query(...), k: int = Query(10)):
     """
@@ -51,4 +47,4 @@ def get_recommendations(user_id: str = Query(...), k: int = Query(10)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)  # ✅ Port 8080 is required
+    uvicorn.run(app, host="0.0.0.0", port=8080) 

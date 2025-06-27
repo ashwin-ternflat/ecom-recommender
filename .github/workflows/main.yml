@@ -3,7 +3,7 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches:
-      - main  # Change this if your default branch is named differently
+      - main  
 
 jobs:
   deploy:
@@ -24,6 +24,11 @@ jobs:
           project_id: ecommerce-recommender-464115
           install_components: 'beta'
 
+
+      - name: Run model training
+        run: |
+          python model/train_model.py
+    
       - name: Build and push Docker image
         run: |
           gcloud builds submit --tag gcr.io/ecommerce-recommender-464115/ecommerce-recommender-api

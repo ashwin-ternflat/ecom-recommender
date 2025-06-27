@@ -5,17 +5,17 @@ from scipy import sparse
 from sklearn.model_selection import train_test_split
 from scipy.sparse import coo_matrix
 
-# -------------------------
-# Load model, mappings, matrix
-# -------------------------
+
+# Loading model plus mappings, matrix
+
 with open('../models/als_model.pkl', 'rb') as f:
     model, user_id_to_index, item_id_to_index = pickle.load(f)
 
 train_matrix = sparse.load_npz('../models/train_matrix.npz')
 
-# -------------------------
-# Load interaction data
-# -------------------------
+
+# Loading interaction data
+
 df = pd.read_csv('../data/sessionized_events.csv')
 df = df[
     df['user_id'].isin(user_id_to_index) &
@@ -36,9 +36,9 @@ n_items = len(item_id_to_index)
 
 test_matrix = build_sparse_matrix(test_df, n_users, n_items)
 
-# -------------------------
-# Manual Precision@K using dot product
-# -------------------------
+
+# Manual Precision@K(dot product)
+
 def manual_precision_at_k(user_factors, item_factors, test_mat, K=10, n_users=100):
     sampled_users = np.random.choice(np.arange(user_factors.shape[0]), size=min(n_users, user_factors.shape[0]), replace=False)
 
@@ -48,10 +48,10 @@ def manual_precision_at_k(user_factors, item_factors, test_mat, K=10, n_users=10
         if len(true_items) == 0:
             continue
 
-        # Get predicted scores for all items
+        # predicted scores for all items
         scores = user_factors[user_idx] @ item_factors.T
 
-        # Recommend Top-K items (excluding already seen ones if needed)
+        # Recommending Top-K items (excluding already seen ones if needed)
         top_items = np.argsort(scores)[-K:][::-1]
 
         hits = np.intersect1d(top_items, true_items)
@@ -59,9 +59,7 @@ def manual_precision_at_k(user_factors, item_factors, test_mat, K=10, n_users=10
 
     return np.mean(precisions) if precisions else 0.0
 
-# -------------------------
-# Run evaluation
-# -------------------------
+
 user_factors = model.user_factors
 item_factors = model.item_factors
 
